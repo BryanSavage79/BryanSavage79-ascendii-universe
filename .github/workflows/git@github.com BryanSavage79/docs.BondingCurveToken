@@ -1,0 +1,31 @@
+```markdown
+# BondingCurveToken
+
+A self-regulating token with a built-in automated market maker based on a bonding curve.
+
+## 📖 Overview
+This contract implements a **continuous liquidity** and **dynamic pricing** mechanism using a mathematical bonding curve.
+
+- **Buy tokens** → price increases as supply grows  
+- **Sell tokens** → price decreases as supply shrinks  
+- **Reserve pool** maintains liquidity at all times  
+
+## ⚙️ Core Features
+- Deterministic pricing model (quadratic by default)
+- No external liquidity needed
+- Fully on-chain price discovery
+- OpenZeppelin-based ERC20 security
+
+## 📜 Functions
+| Function | Description |
+|-----------|--------------|
+| `buy(uint256 amount)` | Mints new tokens at curve price |
+| `sell(uint256 amount)` | Burns tokens and refunds ETH |
+| `calculateBuyCost(uint256)` | Returns ETH required for given mint |
+| `calculateSellRefund(uint256)` | Returns refund for given burn |
+
+## 🧪 Testing
+```bash
+npx hardhat test
+```
+```
