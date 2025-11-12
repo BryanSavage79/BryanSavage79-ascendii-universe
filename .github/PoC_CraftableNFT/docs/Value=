@@ -1,0 +1,47 @@
+Value = Base × Rarity × Quality × (1 + Attributes) × (1 + Sales) 
+
+This formula mimics natural market growth:
+- Scarcity (rarity)
+- Craftsmanship (quality)
+- Uniqueness (attributes)
+- Reputation (sales)
+
+---
+
+## Gameplay & Economics
+
+### Crafting
+To mint (craft) an NFT:
+1. Spend `componentCost` in ERC20 tokens.
+2. Tokens are burned, ensuring scarcity.
+3. A new NFT is minted with randomized quality and chosen attributes.
+
+### Selling
+Trusted marketplaces can call `recordSale(tokenId)` to increase its `sellCount`, which in turn **boosts its computed value**.
+
+---
+
+## Future Expansion
+
+| Layer | Description | Status |
+|-------|--------------|--------|
+| ERC20 Bonding Curve | Dynamic pricing for component tokens | ✅ Implemented |
+| Craftable NFTs | Value evolves with interaction | ✅ PoC Complete |
+| Dynamic Mint Pricing | Tied to bonding curve demand | 🔜 |
+| Marketplace Integration | Automated sale tracking | 🔜 |
+| Metadata System | Custom art and rarity-linked assets | 🔜 |
+| ARIES Integration | AI-assisted artifact evolution | 🔜 |
+
+---
+
+## Philosophy
+> “Creation is not a one-time act. It’s a living process.”
+
+The Ascendii Universe represents a new economic model where value grows through harmony — between creator, creation, and the collective consciousness of participants.
+
+This PoC is the **first working demonstration** of that model in smart contract form.
+
+---
+
+**Maintained by:** Bryan Savage  
+**Repository:** [Ascendii Universe](https://github.com/BryanSavage79-ascendii-universe)
