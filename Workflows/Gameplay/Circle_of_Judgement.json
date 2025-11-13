@@ -1,0 +1,31 @@
+// circle_of_judgment.js
+// Tribunal and reckoning systems: choose restorative or punitive outcomes via weighted voting.
+// The module provides an off-chain simulation of a tribunal vote and outcome resolution.
+
+const SCALE = 10000;
+
+/**
+ * conductTribunal
+ * @param {Array} jurors - array of juror objects {weight, vote: 'restore'|'punish'|'mediate'}
+ * @param {Object} incident
+ * returns {outcome, details}
+ */
+function conductTribunal(jurors, incident) {
+  let restore = 0, punish = 0, mediate = 0;
+  jurors.forEach(j => {
+    const w = Math.floor((j.weight || 1) * SCALE);
+    if (j.vote === "restore") restore += w;
+    else if (j.vote === "punish") punish += w;
+    else mediate += w;
+  });
+
+  const max = Math.max(restore, punish, mediate);
+  let outcome = "mediate";
+  if (max === restore) outcome = "restore";
+  else if (max === punish) outcome = "punish";
+
+  const details = { restore, punish, mediate, incident };
+  return { outcome, details };
+}
+
+module.exports = { conductTribunal };
