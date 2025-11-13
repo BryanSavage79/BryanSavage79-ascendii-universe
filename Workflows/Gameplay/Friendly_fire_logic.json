@@ -1,0 +1,28 @@
+// friendly_fire_logic.js
+// Implements justice and consequence for friendly-fire incidents.
+// Off-chain enforcement logic for PoC: determine reputation impact and remedial actions.
+
+const SCALE = 10000;
+
+/**
+ * evaluateFriendlyFire
+ * @param {Object} incident - {attackerFaction, defenderFaction, severity, context}
+ * severity: 0..1
+ * returns {penalty, restitution, tribunalNeeded}
+ */
+function evaluateFriendlyFire(incident) {
+  const basePenalty = Math.floor(incident.severity * 5000); // up to 50% reputation loss
+  // if attacker and defender are same faction, harsher penalty
+  const sameFactionMultiplier = incident.attackerFaction === incident.defenderFaction ? 1.5 : 1.0;
+  const penalty = Math.min(Math.floor(basePenalty * sameFactionMultiplier), SCALE);
+
+  // restitution: recommended component contribution (scaled)
+  const restitution = Math.floor(penalty * 0.2);
+
+  // tribunal needed for high severity or repeated offenses
+  const tribunalNeeded = incident.severity > 0.75 || incident.context.repeatOffender === true;
+
+  return { penalty, restitution, tribunalNeeded };
+}
+
+module.exports = { evaluateFriendlyFire };
