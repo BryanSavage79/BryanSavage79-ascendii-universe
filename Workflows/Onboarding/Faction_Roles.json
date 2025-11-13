@@ -1,0 +1,30 @@
+```json
+{
+  "factions": [
+    {
+      "id": "f-blade",
+      "name": "The Bladesong",
+      "archetype": "Aggressive Forger",
+      "strengths": ["crafting speed", "attack modifiers"],
+      "weaknesses": ["defense", "ritual patience"],
+      "ritualSignature": "edge"
+    },
+    {
+      "id": "f-ward",
+      "name": "The Wardens",
+      "archetype": "Custodians of Balance",
+      "strengths": ["defensive auras", "safety rituals"],
+      "weaknesses": ["rapid expansion"],
+      "ritualSignature": "shield"
+    },
+    {
+      "id": "f-loom",
+      "name": "The Loom",
+      "archetype": "Weavers of Fate",
+      "strengths": ["probability shaping", "artifact synergy"],
+      "weaknesses": ["direct combat"],
+      "ritualSignature": "weave"
+    }
+  ]
+}
+```
