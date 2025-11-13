@@ -1,0 +1,32 @@
+// faction_balance.js
+// Strategic balancing logic for factions. This module provides deterministic balancing helpers
+// that can be used by off-chain sims or governance tooling. Each function reads like a council
+// convening to reweight strengths and vulnerabilities.
+
+const SCALE = 10000;
+
+/**
+ * computeFactionStrength
+ * @param {Object} faction - {basePower, members, avgActivity}
+ * returns scaled strength
+ */
+function computeFactionStrength(faction) {
+  // basePower weighted by active participation
+  const participation = Math.min(faction.avgActivity, 1.0);
+  const sizeFactor = Math.log1p(faction.members) / Math.log1p(1000); // soft size normalization
+  const strength = faction.basePower * (0.5 + 0.5 * participation) * (0.5 + 0.5 * sizeFactor);
+  return Math.floor(strength * SCALE);
+}
+
+/**
+ * rebalanceFactions
+ * @param {Array} factions - array of faction objects
+ * returns array of normalized weights (sums to SCALE)
+ */
+function rebalanceFactions(factions) {
+  const raw = factions.map(f => computeFactionStrength(f));
+  const total = raw.reduce((a, b) => a + b, 0) || 1;
+  return raw.map(r => Math.floor((r * SCALE) / total));
+}
+
+module.exports = { computeFactionStrength, rebalanceFactions };
