@@ -1,0 +1,30 @@
+```json
+{
+  "rewards": [
+    {
+      "id": "lr-001",
+      "action": "attend_local_meetup",
+      "description": "Attend a local community meetup and register attendance.",
+      "digitalTrigger": "offchain:proof_of_attendance",
+      "reward": { "xp": 200, "badge": "Rally" },
+      "flavor": "You bore witness; the guild recalls your presence."
+    },
+    {
+      "id": "lr-002",
+      "action": "publish_research",
+      "description": "Publish a short research note about equitable digital systems.",
+      "digitalTrigger": "link:publication_url",
+      "reward": { "xp": 500, "badge": "Scribe" },
+      "flavor": "Your insight illuminates a corridor in the Codex."
+    },
+    {
+      "id": "lr-003",
+      "action": "volunteer_hours",
+      "description": "Log volunteer hours with an approved partner org.",
+      "digitalTrigger": "offchain:verified_hours",
+      "reward": { "xp": 350, "badge": "Beacon" },
+      "flavor": "Your labor becomes ritualized into communal fortitude."
+    }
+  ]
+}
+```
