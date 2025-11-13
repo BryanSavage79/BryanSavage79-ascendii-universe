@@ -1,0 +1,58 @@
+name: Solidity CI - Compile & Test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    name: Compile contracts and run tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.npm
+            node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Compile Solidity contracts
+        run: npx hardhat compile
+
+      - name: Run tests
+        run: npx hardhat test --no-compile
+        env:
+          CI: true
+
+      - name: Upload test logs (optional)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hardhat-test-log
+          path: |
+            ./hh-test.log
+            ./test-output || true
+
+      - name: Annotate success
+        if: success()
+        run: echo "Solidity compile and tests succeeded."
