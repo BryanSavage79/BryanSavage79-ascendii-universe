@@ -1,3 +1,42 @@
+# Ascendii Universe — Public Repository
+
+🧭 **Purpose of This Public Repository**
+
+This repo serves five key purposes:
+
+1. **Transparency** — To show the world the mission, structure, and ethical foundation of the Ascendii Universe.  
+2. **Recruitment** — A place for engineers, economists, creators, researchers, and worldbuilders to discover the project and request deeper access.  
+3. **Education** — To give future contributors the conceptual frameworks needed to understand the full scope before entering the Nexus.  
+4. **Documentation** — A living public knowledge base.  
+5. **Signal** — This is the front door — the lighthouse that signals to the right kind of minds.
+
+🎖 **Contributor Path (Simplified)**
+
+- **Tier 0 — Public Explorer**  
+  Read this repo. Learn the mission.
+
+- **Tier 1 — Verified Contributor**  
+  Access to limited private documents and the contributor Discord.
+
+- **Tier 2 — Inner Developer Circle**  
+  Access to the Nexus documentation and gated repositories.
+
+- **Tier 3 — Founding Architect**  
+  Core builders with long-term stewardship responsibilities.
+
+The Nexus opens only to those who demonstrate alignment, competence, and integrity.
+
+🌱 **Closing Message**
+
+This repo is the invitation.  
+Not the machinery.  
+The machinery lives in the Nexus.
+
+If what you see here inspires you, challenges you, or calls to you…
+
+…follow the path.
+
+---
 # CraftableNFT — Proof of Concept (Ascendii Universe)
 
 This repository submodule demonstrates the **core economic and interactive logic** of the Ascendii Universe ecosystem. It integrates a **bonding-curve ERC20 component token** with a **dynamic NFT** whose on-chain value evolves based on rarity, quality, attributes, and trading activity.
