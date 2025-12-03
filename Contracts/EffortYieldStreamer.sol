@@ -15,19 +15,21 @@ interface ISablierV2Batch {
         uint40 durationSeconds;
         string metadata;
     }
-       function batchCreateWithDurations(CreateWithDurations[] calldata batch) external returns (uint256[] memory streamIds);
+    function batchCreateWithDurations(CreateWithDurations[] calldata batch) external returns (uint256[] memory streamIds);
 }
+
 interface IEffortToken {
     function balanceOf(address account) external view returns (uint256);
 }
-contract EffortYieldStreamer is Ownable2Step {
-        using SafeERC20 for IERC20;
 
-        IERC20 public immutable USDC;
+contract EffortYieldStreamer is Ownable2Step {
+    using SafeERC20 for IERC20;
+
+    IERC20 public immutable USDC;
     IEffortToken public immutable effortToken;
     ISablierV2Batch public immutable sablier;
 
-// Tier thresholds (adjust with governance)
+    // Tier thresholds (adjust with governance)
     uint256 public tier1 = 10_000 ether;   // ≥10k Effort → $50/month
     uint256 public tier2 = 50_000 ether;   // ≥50k → $250/month
     uint256 public tier3 = 200_000 ether;  // ≥200k → $1,000/month
@@ -38,8 +40,8 @@ contract EffortYieldStreamer is Ownable2Step {
 
     event YieldStreamed(address indexed recipient, uint256 streamId, uint128 amount);
 
-    constructo(
-    address _usdc,
+    constructor(
+        address _usdc,
         address _effortToken,
         address _sablier,
         address initialOwner
@@ -53,6 +55,8 @@ contract EffortYieldStreamer is Ownable2Step {
     // Call this weekly via Chainlink Automation / Gelato
     function distributeWeeklyYield(address[] calldata recipients) external {
         ISablierV2Batch.CreateWithDurations[] memory batch = new ISablierV2Batch.CreateWithDurations[](recipients.length);
+        uint256 totalNeeded = 0;
+        uint256 count = 0;
 
         for (uint i = 0; i < recipients.length; i++) {
             address user = recipients[i];
@@ -64,22 +68,35 @@ contract EffortYieldStreamer is Ownable2Step {
             else if (effort >= tier1) monthlyAmount = 50e6;    // $50
 
             if (monthlyAmount > 0 && block.timestamp > lastStreamed[user] + 25 days) {
-            batch[i] = ISablierV2Batch.CreateWithDurations({
+                batch[count] = ISablierV2Batch.CreateWithDurations({
                     sender: address(this),
                     recipient: user,
                     totalAmount: monthlyAmount,
                     token: address(USDC),
                     cancelable: false,
                     durationSeconds: STREAM_DURATION,
-                    metadata: "Nexus of Equity Perpetual Yield"
+                    metadata: "Nexus of Equity is Perpetual Yield"
                 });
                 lastStreamed[user] = block.timestamp;
+                totalNeeded += monthlyAmount;
+                count++;
             }
         }
-        
-                 // Pull from communityYieldVault → this contract
-                    uint256 totalNeeded = USDC.balanceOf(address( USDC.safeTransferFrom(msg.sender, address(this), totalNeeded); // msg.sender = communityYieldVault or keeper
-                    USDC.safeApprove(address(sablier), type(uint256).max);
-        sablier.batchCreateWithDurations(batch);
+
+        // Resize batch to actual count
+        ISablierV2Batch.CreateWithDurations[] memory finalBatch = new ISablierV2Batch.CreateWithDurations[](count);
+        for (uint j = 0; j < count; j++) {
+            finalBatch[j] = batch[j];
+        }
+
+        // Pull funds from communityYieldVault → this contract
+        USDC.safeTransferFrom(msg.sender, address(this), totalNeeded);
+        USDC.safeApprove(address(sablier), totalNeeded);
+
+        uint256[] memory streamIds = sablier.batchCreateWithDurations(finalBatch);
+
+        for (uint k = 0; k < streamIds.length; k++) {
+            emit YieldStreamed(finalBatch[k].recipient, streamIds[k], finalBatch[k].totalAmount);
+        }
     }
 }
