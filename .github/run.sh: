@@ -1,0 +1,14 @@
+#!/bin/bash
+set -e
+
+echo "🚀 Starting Ascendii Sepolia ritual..."
+
+# Step 1: Deploy all contracts
+echo "⚔️ Deploying contracts..."
+npx hardhat run scripts/deploy.js --network sepolia
+
+# Step 2: Simulate the flywheel loop
+echo "🔮 Running simulation..."
+npx hardhat run scripts/simulate.js --network sepolia
+
+echo "✨ Ritual complete!"
