@@ -1,3 +1,4 @@
-SEPOLIA_RPC_URL=https://sepolia.infura.io/v3/YOUR_PROJECT_ID
-PRIVATE_KEY=your_wallet_private_key
-
+SEPOLIA_RPC_URL=https://sepolia.infura.io/v3/YOUR_INFURA_KEY
+# or Alchemy: https://eth-sepolia.g.alchemy.com/v2/YOUR_KEY
+PRIVATE_KEY=0xYOUR_PRIVATE_KEY_NEVER_SHARE
+ETHERSCAN_API_KEY=YOUR_ETHERSCAN_KEY   # optional
