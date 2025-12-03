@@ -1,2 +1,4 @@
 npm init -y
-
+npm install --save-dev hardhat @nomicfoundation/hardhat-npm install @openzeppelin/contracts dotenv
+npm install @openzeppelin/contracts dotenv
+npx hardhat init
