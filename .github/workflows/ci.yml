@@ -23,16 +23,21 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: npm
+          cache-dependency-path: Contracts/package-lock.json
 
       - name: Install dependencies
         run: npm ci
+        working-directory: Contracts
 
       - name: Compile contracts
         run: npx hardhat compile
+        working-directory: Contracts
 
       - name: Run tests
         run: npx hardhat test
+        working-directory: Contracts
 
       - name: Run gas reporter (non-blocking)
         run: npx hardhat test --gas-reporter
+        working-directory: Contracts
         continue-on-error: true
