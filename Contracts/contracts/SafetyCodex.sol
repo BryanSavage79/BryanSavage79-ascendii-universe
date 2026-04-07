@@ -15,8 +15,8 @@ contract SafetyCodex is AccessControl, Pausable {
     event InteropCheck(bytes32 indexed id, bool passed, string note);
 
     constructor(address root) {
-        _setupRole(DEFAULT_ADMIN_ROLE, root);
-        _setupRole(MODERATOR, root);
+        _grantRole(DEFAULT_ADMIN_ROLE, root);
+        _grantRole(MODERATOR, root);
     }
 
     /// @notice Quick interoperability assertion. Contracts can call this to register a check.

@@ -4,27 +4,237 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Ascendii Universe | Ritualized Cross-Chain Crafting</title>
+  <!-- Geometric sans-serif for tech-forward vibe -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;700&family=Montserrat:wght@700&display=swap" rel="stylesheet" />
   <style>
-    :root { --glow: #00ff88; --bg: #0a0a0a; }
-    body { 
-      margin: 0; padding: 0; font-family: 'Courier New', monospace; 
-      background: var(--bg); color: var(--glow); text-align: center; 
-      padding: 40px 20px; line-height: 1.6;
+    /* ── Design Tokens ───────────────────────────────────────────────── */
+    :root {
+      --navy-base:   rgba(10, 17, 40, 0.40);   /* navy-900 @ 40% opacity */
+      --navy-solid:  #0a1128;                   /* sidebar solid chrome   */
+      --gold:        #c9a84c;                   /* primary gold accent    */
+      --gold-bright: #f0c74b;                   /* hover / active gold    */
+      --gold-glow:   rgba(201, 168, 76, 0.55);  /* bloom glow tint        */
+      --text-light:  #e8e0cc;
+      --text-muted:  rgba(232, 224, 204, 0.55);
+      --sidebar-w:   72px;
+      --font-stack:  'Inter', 'Montserrat', sans-serif;
     }
-    h1 { font-size: 3em; margin: 0.2em 0; text-shadow: 0 0 10px var(--glow); }
-    p { max-width: 700px; margin: 1em auto; }
+
+    /* ── Reset ───────────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-stack);
+      background: var(--navy-solid);
+      color: var(--text-light);
+      /* Push main content right of the fixed sidebar */
+      padding-left: var(--sidebar-w);
+      min-height: 100vh;
+    }
+
+    /* ── Fixed Sidebar ───────────────────────────────────────────────── */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: var(--sidebar-w);
+      height: 100vh;
+      /* Navy-900/40 frosted-glass base */
+      background: var(--navy-base);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-right: 1px solid rgba(201, 168, 76, 0.18);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 0;
+      gap: 8px;
+      z-index: 100;
+    }
+
+    .sidebar__logo {
+      width: 40px;
+      height: 40px;
+      margin-bottom: 16px;
+      filter: drop-shadow(0 0 6px var(--gold-glow));
+    }
+
+    /* ── Icon Container (nav items) ─────────────────────────────────── */
+    .sidebar__item {
+      position: relative;
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+      text-decoration: none;
+    }
+
+    .sidebar__item:hover {
+      color: var(--gold);
+      background: rgba(201, 168, 76, 0.10);
+    }
+
+    /* Active / Web-3 connected state — Ascendii Flywheel bloom effect */
+    .sidebar__item.is-active {
+      color: var(--gold-bright);
+      background: rgba(201, 168, 76, 0.15);
+      /* Outer bloom shadow mimicking vibrant flywheel lighting */
+      box-shadow:
+        0 0  8px 2px var(--gold-glow),
+        0 0 20px 4px rgba(201, 168, 76, 0.25);
+    }
+
+    .sidebar__item svg {
+      width: 22px;
+      height: 22px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* Tooltip label on hover */
+    .sidebar__item::after {
+      content: attr(data-label);
+      position: absolute;
+      left: calc(100% + 10px);
+      white-space: nowrap;
+      background: var(--navy-solid);
+      border: 1px solid rgba(201, 168, 76, 0.25);
+      color: var(--gold);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      padding: 4px 10px;
+      border-radius: 6px;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateX(-4px);
+      transition: opacity 0.18s ease, transform 0.18s ease;
+    }
+
+    .sidebar__item:hover::after {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    /* Spacer pushes bottom items down */
+    .sidebar__spacer { flex: 1; }
+
+    /* Web-3 wallet indicator dot */
+    .sidebar__w3-dot {
+      --dot-glow-sm: 0 0 6px 2px var(--gold-glow);
+      --dot-glow-lg: 0 0 12px 4px var(--gold-glow);
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--gold-bright);
+      box-shadow: var(--dot-glow-sm);
+      margin-bottom: 12px;
+      animation: pulse-dot 2.4s ease-in-out infinite;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1;    box-shadow: var(--dot-glow-sm); }
+      50%      { opacity: 0.55; box-shadow: var(--dot-glow-lg); }
+    }
+
+    /* ── Main Content ────────────────────────────────────────────────── */
+    .main {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 60px 24px 40px;
+      line-height: 1.6;
+    }
+
+    h1 {
+      font-family: var(--font-stack);
+      font-size: clamp(2rem, 6vw, 3.4rem);
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: var(--gold-bright);
+      text-shadow: 0 0 18px var(--gold-glow);
+      margin-bottom: 0.3em;
+    }
+
+    .tagline {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      font-style: italic;
+      margin-bottom: 2rem;
+    }
+
+    .banner {
+      width: 90%;
+      max-width: 800px;
+      border: 1.5px solid rgba(201, 168, 76, 0.35);
+      border-radius: 16px;
+      margin: 0 auto 2.5rem;
+      display: block;
+      box-shadow: 0 0 24px rgba(201, 168, 76, 0.12);
+    }
+
     .btn {
-      display: inline-block; background: var(--glow); color: #000; 
-      padding: 16px 32px; border-radius: 12px; text-decoration: none; 
-      font-weight: bold; font-size: 1.2em; margin: 20px;
-      box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+      display: inline-block;
+      background: transparent;
+      color: var(--gold);
+      border: 1.5px solid var(--gold);
+      padding: 14px 30px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-family: var(--font-stack);
+      font-weight: 600;
+      font-size: 1rem;
+      letter-spacing: 0.05em;
+      margin: 8px;
+      transition: background 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
     }
-    .btn:hover { transform: scale(1.05); }
-    video, img { 
-      width: 90%; max-width: 800px; border: 2px solid var(--glow); 
-      border-radius: 16px; margin: 30px auto; display: block;
+
+    .btn:hover {
+      background: rgba(201, 168, 76, 0.12);
+      box-shadow: 0 0 16px var(--gold-glow);
+      color: var(--gold-bright);
     }
-    footer { margin-top: 60px; font-size: 0.9em; opacity: 0.7; }
+
+    .btn--primary {
+      background: var(--gold);
+      color: #0a1128;
+      border-color: var(--gold);
+    }
+
+    .btn--primary:hover {
+      background: var(--gold-bright);
+      box-shadow: 0 0 20px var(--gold-glow);
+      color: #0a1128;
+    }
+
+    .meta {
+      margin-top: 1.5rem;
+      font-size: 0.88rem;
+      color: var(--text-muted);
+    }
+
+    .meta a { color: var(--gold); text-decoration: none; }
+    .meta a:hover { color: var(--gold-bright); }
+
+    footer {
+      margin-top: auto;
+      padding-top: 3rem;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      letter-spacing: 0.04em;
+    }
   </style>
 </head>
 <body>
@@ -32,29 +242,69 @@
   <h1>ASCENDII UNIVERSE</h1>
   <p><i>Craft legends. Bridge realms. Own your myth.</i></p>
 
-  <!-- Replace with your actual demo video or banner -->
-  <img src="Interlink-Banner.png" alt="Ascendii Banner" />
+  <!-- ── Fixed Sidebar ──────────────────────────────────────────────── -->
+  <nav class="sidebar" aria-label="Main navigation">
 
-  <p>
-    <a href="https://ascendiiuniverse.com" class="btn">
-      Enter the Hall
+    <!-- Brand mark — stroke inherits gold from parent color -->
+    <svg class="sidebar__logo" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="color: var(--gold)">
+      <polygon points="20,4 36,32 4,32" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+      <line x1="20" y1="4" x2="20" y2="32" stroke="currentColor" stroke-width="1.2" opacity="0.5"/>
+    </svg>
+
+    <!-- Hall (Home) — active by default -->
+    <a class="sidebar__item is-active" href="https://ascendiiuniverse.com" data-label="The Hall" aria-label="The Hall">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><polyline points="9 21 9 12 15 12 15 21"/></svg>
     </a>
-  </p>
 
-  <p>
-    <a href="https://github.com/BryanSavage79/BryanSavage79-ascendii-universe" class="btn">
-      Join the Forge
+    <!-- Forge -->
+    <a class="sidebar__item" href="https://github.com/BryanSavage79/BryanSavage79-ascendii-universe" data-label="The Forge" aria-label="The Forge">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3-3a1 1 0 000-1.4l-1.6-1.6a1 1 0 00-1.4 0l-3 3z"/><path d="M13 6L3 16l5 5 10-10"/></svg>
     </a>
-  </p>
 
-  <p>
-    <strong>Live on Sepolia + Mumbai</strong> • MIT License • 
-    <a href="https://discord.gg/your-discord" style="color:var(--glow)">Discord</a> • 
-    <a href="https://twitter.com/AscendiiForge" style="color:var(--glow)">Twitter</a>
-  </p>
+    <!-- Rituals -->
+    <a class="sidebar__item" href="#" data-label="Rituals" aria-label="Rituals">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+    </a>
 
-  <footer>
-    The Interlink Exchange — Where effort becomes essence.
-  </footer>
+    <!-- Interlink Exchange -->
+    <a class="sidebar__item" href="#" data-label="Interlink Exchange" aria-label="Interlink Exchange">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+    </a>
+
+    <div class="sidebar__spacer"></div>
+
+    <!-- Web-3 wallet indicator dot -->
+    <div class="sidebar__w3-dot" title="Web-3 Connected"></div>
+
+    <!-- Wallet / Profile -->
+    <a class="sidebar__item" href="#" data-label="Wallet" aria-label="Wallet">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3H8a2 2 0 00-2 2v2h12V5a2 2 0 00-2-2z"/><circle cx="16" cy="14" r="1" fill="currentColor"/></svg>
+    </a>
+  </nav>
+
+  <!-- ── Main Content ────────────────────────────────────────────────── -->
+  <main class="main">
+    <h1>ASCENDII UNIVERSE</h1>
+    <p class="tagline"><i>Craft legends. Bridge realms. Own your myth.</i></p>
+
+    <!-- Replace with your actual demo video or banner -->
+    <img class="banner" src="Interlink-Banner.png" alt="Ascendii Interlink Banner" />
+
+    <div>
+      <a href="https://ascendiiuniverse.com" class="btn btn--primary">Enter the Hall</a>
+      <a href="https://github.com/BryanSavage79/BryanSavage79-ascendii-universe" class="btn">Join the Forge</a>
+    </div>
+
+    <p class="meta">
+      <strong>Live on Sepolia + Mumbai</strong> &bull; MIT License &bull;
+      <a href="https://discord.gg/your-discord">Discord</a> &bull;
+      <a href="https://twitter.com/AscendiiForge">Twitter</a>
+    </p>
+
+    <footer>
+      The Interlink Exchange &mdash; Where effort becomes essence.
+    </footer>
+  </main>
+
 </body>
 </html>
