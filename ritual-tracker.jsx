@@ -390,7 +390,7 @@ const RitualTracker = () => {
       <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         {[
           { label: "Total XP Earned",     value: totalXP.toLocaleString(), icon: <IconStar size={20} />,    color: "text-yellow-400" },
-          { label: "Rituals Proven",       value: provenCount,               icon: <IconCheck size={20} />,  color: "text-emerald-400" },
+          { label: "Proven Rituals",        value: provenCount,               icon: <IconCheck size={20} />,  color: "text-emerald-400" },
           { label: "Awaiting Proof",       value: pendingCount,              icon: <IconFlame size={20} />,  color: "text-yellow-400" },
           { label: "Charity (ETH)",        value: totalCharity.toFixed(3),   icon: <IconDroplet size={20} />, color: "text-blue-400" },
         ].map(card => (
