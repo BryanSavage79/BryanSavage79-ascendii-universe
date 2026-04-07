@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ascendii Universe | Construction Zone</title>
+  <style>
+    /* ── Reset & base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --amber:   #ffaa00;
+      --green:   #00ff88;
+      --blue:    #00aaff;
+      --purple:  #aa44ff;
+      --bg:      #0a0a12;
+      --text:    #e0e0e0;
+      --warn:    #ff8800;
+    }
+
+    /* ── Full-screen construction background ── */
+    body {
+      min-height: 100vh;
+      font-family: 'Courier New', monospace;
+      color: var(--text);
+      background-color: var(--bg);
+      background-image: url('../public/assets/construction-bg.svg');
+      background-size: cover;
+      background-position: center bottom;
+      background-repeat: no-repeat;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Dark overlay so text stays readable */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(10,10,18,0.55) 0%,
+        rgba(10,10,18,0.35) 50%,
+        rgba(10,10,18,0.75) 100%
+      );
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Particle canvas wrapper ── */
+    #particle-layer {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      overflow: hidden;
+    }
+
+    /* Each dust / spark particle */
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0;
+      animation: drift linear infinite;
+      will-change: transform, opacity;
+    }
+
+    @keyframes drift {
+      0%   { transform: translateY(0)   translateX(0)   scale(1);   opacity: 0; }
+      10%  { opacity: var(--max-opacity, 0.6); }
+      80%  { opacity: var(--max-opacity, 0.6); }
+      100% { transform: translateY(var(--rise, -180px)) translateX(var(--sway, 30px)) scale(0.3);
+             opacity: 0; }
+    }
+
+    /* ── Page layout ── */
+    .page {
+      position: relative;
+      z-index: 2;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* ── Header ── */
+    header {
+      width: 100%;
+      padding: 32px 20px 16px;
+      text-align: center;
+    }
+
+    .warning-tape {
+      display: inline-block;
+      background: repeating-linear-gradient(
+        -45deg,
+        var(--amber) 0px,
+        var(--amber) 16px,
+        #1a1a00 16px,
+        #1a1a00 32px
+      );
+      color: #000;
+      font-weight: 900;
+      font-size: 0.75em;
+      letter-spacing: 0.25em;
+      padding: 6px 20px;
+      border-radius: 4px;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      font-size: clamp(2.2em, 6vw, 4em);
+      letter-spacing: 0.12em;
+      text-shadow: 0 0 20px var(--amber), 0 0 40px rgba(255,170,0,0.4);
+      color: var(--amber);
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      font-size: clamp(0.85em, 2vw, 1.1em);
+      color: #aaa;
+      max-width: 560px;
+      margin: 0 auto 8px;
+      line-height: 1.6;
+    }
+
+    /* ── Progress bar ── */
+    .progress-wrap {
+      width: min(560px, 90%);
+      margin: 24px auto 0;
+      text-align: left;
+    }
+
+    .progress-label {
+      font-size: 0.75em;
+      letter-spacing: 0.15em;
+      color: var(--amber);
+      margin-bottom: 6px;
+    }
+
+    .progress-track {
+      height: 10px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 6px;
+      overflow: hidden;
+      border: 1px solid rgba(255,170,0,0.3);
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--warn), var(--amber));
+      border-radius: 6px;
+      animation: progressGrow 3s ease-out 0.5s forwards;
+      box-shadow: 0 0 10px var(--amber);
+    }
+
+    @keyframes progressGrow { to { width: 34%; } }
+
+    /* ── Portal grid ── */
+    .portal-zone {
+      position: relative;
+      width: 100%;
+      max-width: 1100px;
+      padding: 60px 20px 80px;
+      margin: 0 auto;
+    }
+
+    .portal-zone-label {
+      text-align: center;
+      font-size: 0.7em;
+      letter-spacing: 0.3em;
+      color: rgba(255,170,0,0.5);
+      margin-bottom: 48px;
+    }
+
+    .portals {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: clamp(24px, 4vw, 56px);
+    }
+
+    /* ── Single portal ── */
+    .portal {
+      position: relative;
+      width: clamp(160px, 22vw, 230px);
+      aspect-ratio: 1;
+      cursor: pointer;
+      text-decoration: none;
+      flex-shrink: 0;
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      outline: none;
+
+      /* The outer ring */
+      border: 2px solid transparent;
+      background-clip: padding-box;
+
+      transition: transform 0.25s ease;
+    }
+
+    .portal:hover  { transform: scale(1.08); }
+    .portal:focus  { outline: 3px solid var(--amber); outline-offset: 6px; }
+    .portal:active { transform: scale(0.97); }
+
+    /* Rotating outer ring using pseudo-element */
+    .portal::before {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      border: 3px solid transparent;
+      background:
+        conic-gradient(var(--ring-color, #ffaa00) 0deg 120deg, transparent 120deg 360deg)
+        border-box;
+      -webkit-mask:
+        linear-gradient(#fff 0 0) padding-box,
+        linear-gradient(#fff 0 0);
+      -webkit-mask-composite: destination-out;
+      mask-composite: exclude;
+      animation: spinRing 6s linear infinite;
+      pointer-events: none;
+    }
+
+    @keyframes spinRing { to { transform: rotate(360deg); } }
+
+    /* Glowing filled circle */
+    .portal-inner {
+      position: absolute;
+      inset: 6px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 40% 35%, var(--ring-color, #ffaa00) 0%, rgba(10,10,18,0.9) 70%);
+      opacity: 0.18;
+      transition: opacity 0.3s;
+    }
+    .portal:hover .portal-inner { opacity: 0.35; }
+
+    /* Glow pulse behind the portal */
+    .portal::after {
+      content: '';
+      position: absolute;
+      inset: -12px;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--ring-color, #ffaa00) 0%, transparent 70%);
+      opacity: 0;
+      animation: portalPulse 3s ease-in-out infinite;
+      pointer-events: none;
+    }
+    @keyframes portalPulse {
+      0%, 100% { opacity: 0;    transform: scale(0.9); }
+      50%       { opacity: 0.18; transform: scale(1.1); }
+    }
+
+    .portal-icon {
+      font-size: clamp(2.2em, 5vw, 3em);
+      margin-bottom: 8px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .portal-label {
+      font-size: clamp(0.65em, 1.5vw, 0.82em);
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text);
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      line-height: 1.3;
+      padding: 0 12px;
+    }
+
+    .portal-status {
+      font-size: 0.62em;
+      letter-spacing: 0.12em;
+      color: rgba(255,255,255,0.45);
+      margin-top: 4px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Portal colour themes */
+    .portal--amber  { --ring-color: #ffaa00; }
+    .portal--green  { --ring-color: #00ff88; }
+    .portal--blue   { --ring-color: #00aaff; }
+    .portal--purple { --ring-color: #aa44ff; }
+
+    /* Blinking "under construction" dot on locked portals */
+    .portal-status.locked::before {
+      content: '● ';
+      color: var(--warn);
+      animation: blink 1.2s step-start infinite;
+    }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    /* ── Floating Assistant ── */
+    #assistant {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 10px;
+      max-width: min(360px, calc(100vw - 48px));
+    }
+
+    .assistant-bubble {
+      background: rgba(10, 10, 24, 0.92);
+      border: 1px solid rgba(255, 170, 0, 0.4);
+      border-radius: 16px 16px 4px 16px;
+      padding: 14px 18px;
+      font-size: 0.82em;
+      line-height: 1.55;
+      color: #ccc;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,170,0,0.1);
+      max-width: 100%;
+      animation: bubbleIn 0.35s ease-out;
+      position: relative;
+    }
+
+    @keyframes bubbleIn {
+      from { opacity: 0; transform: translateY(12px) scale(0.96); }
+      to   { opacity: 1; transform: translateY(0)   scale(1); }
+    }
+
+    .bubble-close {
+      position: absolute;
+      top: 8px;
+      right: 10px;
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.4);
+      font-size: 1em;
+      cursor: pointer;
+      line-height: 1;
+      padding: 0 4px;
+    }
+    .bubble-close:hover { color: var(--amber); }
+
+    .bubble-text { padding-right: 16px; }
+
+    .assistant-avatar-btn {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 38% 35%, #ffcc44, #ff6600);
+      border: 2px solid var(--amber);
+      box-shadow: 0 0 18px rgba(255,170,0,0.45);
+      cursor: pointer;
+      font-size: 1.6em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s, box-shadow 0.2s;
+      animation: assistantFloat 4s ease-in-out infinite;
+    }
+    .assistant-avatar-btn:hover {
+      transform: scale(1.12);
+      box-shadow: 0 0 28px rgba(255,170,0,0.65);
+    }
+
+    @keyframes assistantFloat {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-6px); }
+    }
+
+    /* Notification pip on avatar */
+    .assistant-pip {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 12px;
+      height: 12px;
+      background: var(--warn);
+      border-radius: 50%;
+      border: 2px solid var(--bg);
+      animation: blink 1.5s step-start infinite;
+    }
+
+    /* ── Footer ── */
+    footer {
+      position: relative;
+      z-index: 2;
+      padding: 28px 20px;
+      text-align: center;
+      font-size: 0.75em;
+      color: rgba(255,255,255,0.3);
+      letter-spacing: 0.1em;
+    }
+    footer a { color: rgba(255,170,0,0.6); text-decoration: none; }
+    footer a:hover { color: var(--amber); }
+
+    /* ── Responsive ── */
+    @media (max-width: 480px) {
+      .portals { gap: 20px; }
+      #assistant { bottom: 16px; right: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Particle layer ── -->
+  <div id="particle-layer" aria-hidden="true"></div>
+
+  <!-- ── Main page content ── -->
+  <div class="page">
+
+    <header>
+      <div class="warning-tape">⚠ CONSTRUCTION ZONE ⚠</div>
+      <h1>ASCENDII UNIVERSE</h1>
+      <p class="subtitle">
+        The forge is being built. Legends are taking shape.<br/>
+        Step through a portal — some realms are already open.
+      </p>
+
+      <!-- Construction progress indicator -->
+      <div class="progress-wrap">
+        <div class="progress-label">BUILD PROGRESS — PHASE I</div>
+        <div class="progress-track">
+          <div class="progress-fill"></div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ── Portal zone ── -->
+    <section class="portal-zone" aria-label="Zone portals">
+      <p class="portal-zone-label">▲ CHOOSE YOUR ZONE ▲</p>
+
+      <div class="portals">
+
+        <!-- Portal 1 — Nexus Forge (open) -->
+        <a
+          class="portal portal--amber"
+          href="Index.html"
+          aria-label="Enter the Nexus Forge"
+        >
+          <div class="portal-inner"></div>
+          <span class="portal-icon">🔥</span>
+          <span class="portal-label">Nexus Forge</span>
+          <span class="portal-status">OPEN</span>
+        </a>
+
+        <!-- Portal 2 — Aqua Vitae (open) -->
+        <a
+          class="portal portal--blue"
+          href="trinity/progression.md"
+          aria-label="Enter the Aqua Vitae realm"
+        >
+          <div class="portal-inner"></div>
+          <span class="portal-icon">💧</span>
+          <span class="portal-label">Aqua Vitae</span>
+          <span class="portal-status">OPEN</span>
+        </a>
+
+        <!-- Portal 3 — Helios Forge (under construction) -->
+        <a
+          class="portal portal--green"
+          href="#"
+          aria-label="Helios Forge — under construction"
+          aria-disabled="true"
+          tabindex="0"
+          data-locked="true"
+        >
+          <div class="portal-inner"></div>
+          <span class="portal-icon">☀️</span>
+          <span class="portal-label">Helios Forge</span>
+          <span class="portal-status locked">BUILDING</span>
+        </a>
+
+        <!-- Portal 4 — Arbor Vitae (under construction) -->
+        <a
+          class="portal portal--purple"
+          href="#"
+          aria-label="Arbor Vitae — under construction"
+          aria-disabled="true"
+          tabindex="0"
+          data-locked="true"
+        >
+          <div class="portal-inner"></div>
+          <span class="portal-icon">🌳</span>
+          <span class="portal-label">Arbor Vitae</span>
+          <span class="portal-status locked">BUILDING</span>
+        </a>
+
+      </div>
+    </section>
+
+  </div><!-- /.page -->
+
+  <!-- ── Floating Assistant ── -->
+  <aside id="assistant" aria-live="polite" aria-label="Construction assistant">
+    <div class="assistant-bubble" id="assistant-bubble" role="status">
+      <button class="bubble-close" id="bubble-close-btn" aria-label="Dismiss message">✕</button>
+      <p class="bubble-text" id="bubble-text">
+        Welcome, Architect. This sector is under active construction.
+        The <strong style="color:var(--amber)">Nexus Forge</strong> and
+        <strong style="color:#00aaff">Aqua Vitae</strong> portals are live —
+        the others will open as we build.
+      </p>
+    </div>
+    <div style="position:relative; display:inline-block;">
+      <button
+        class="assistant-avatar-btn"
+        id="assistant-toggle"
+        aria-label="Toggle construction assistant"
+        aria-expanded="true"
+        aria-controls="assistant-bubble"
+      >🪖</button>
+      <span class="assistant-pip" id="assistant-pip" aria-hidden="true"></span>
+    </div>
+  </aside>
+
+  <!-- ── Footer ── -->
+  <footer>
+    <a href="Index.html">← Back to Hall</a> &nbsp;|&nbsp;
+    Ascendii Universe — Forging legends since 2024 &nbsp;|&nbsp;
+    <a href="https://github.com/BryanSavage79/BryanSavage79-ascendii-universe" target="_blank" rel="noopener">GitHub</a>
+  </footer>
+
+  <script>
+    /* ================================================================
+       PARTICLES  — ambient dust / light motes
+    ================================================================ */
+    (function initParticles() {
+      const layer  = document.getElementById('particle-layer');
+      const COUNT  = 55;
+      const COLORS = [
+        'rgba(255,170,0,{a})',   // amber dust
+        'rgba(255,136,0,{a})',   // orange spark
+        'rgba(0,255,136,{a})',   // green energy
+        'rgba(200,220,255,{a})', // cool light mote
+        'rgba(255,255,220,{a})', // warm light mote
+      ];
+
+      function rand(min, max) { return Math.random() * (max - min) + min; }
+      function choice(arr)    { return arr[Math.floor(Math.random() * arr.length)]; }
+
+      for (let i = 0; i < COUNT; i++) {
+        const el = document.createElement('div');
+        el.className = 'particle';
+
+        const size   = rand(2, 7);
+        const alpha  = rand(0.25, 0.7);
+        const color  = choice(COLORS).replace('{a}', alpha.toFixed(2));
+        const startX = rand(0, 100);     // % from left
+        const startY = rand(30, 100);    // % from top (start lower)
+        const rise   = -rand(120, 280);  // px upward
+        const sway   = rand(-60, 60);    // px horizontal drift
+        const dur    = rand(6, 20);      // animation duration seconds
+        const delay  = rand(0, dur);     // stagger so not all start together
+
+        Object.assign(el.style, {
+          width:  `${size}px`,
+          height: `${size}px`,
+          left:   `${startX}%`,
+          top:    `${startY}%`,
+          background: color,
+          boxShadow: `0 0 ${size * 2}px ${color}`,
+          '--rise':        `${rise}px`,
+          '--sway':        `${sway}px`,
+          '--max-opacity': alpha.toFixed(2),
+          animationDuration: `${dur}s`,
+          animationDelay:    `-${delay}s`,
+        });
+
+        layer.appendChild(el);
+      }
+    })();
+
+    /* ================================================================
+       PORTALS  — block locked portals, show assistant hint
+    ================================================================ */
+    const messages = [
+      "Careful — that portal is still being welded together. Check back soon.",
+      "This zone is under construction. The Architects are working around the clock!",
+      "Access restricted until Phase II. Stay tuned — it'll be worth the wait.",
+      "Construction crews detected beyond this portal. Entry blocked for safety.",
+    ];
+
+    let msgIndex = 0;
+
+    document.querySelectorAll('[data-locked="true"]').forEach(portal => {
+      portal.addEventListener('click', e => {
+        e.preventDefault();
+        showBubble(messages[msgIndex % messages.length]);
+        msgIndex++;
+      });
+      portal.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          showBubble(messages[msgIndex % messages.length]);
+          msgIndex++;
+        }
+      });
+    });
+
+    /* ================================================================
+       ASSISTANT  — toggle, rotate messages, dismiss
+    ================================================================ */
+    const assistantMessages = [
+      "Welcome, Architect. This sector is under active construction. The <strong style='color:var(--amber)'>Nexus Forge</strong> and <strong style='color:#00aaff'>Aqua Vitae</strong> portals are live — the others will open as we build.",
+      "💡 Tip: Earn <strong>EffortTokens</strong> in the Nexus Forge while you wait for the other zones to open.",
+      "🏗️ Phase I construction is 34% complete. Helios Forge & Arbor Vitae arriving in Phase II.",
+      "⚠️ Hazard notice: unfinished portal rings may emit unstabilised energy. Keep a safe distance from locked portals.",
+      "📜 The Trinity path — Water → Energy → Nature — begins in the Aqua Vitae portal. Your legend awaits.",
+    ];
+
+    const bubble    = document.getElementById('assistant-bubble');
+    const bubbleText = document.getElementById('bubble-text');
+    const toggleBtn  = document.getElementById('assistant-toggle');
+    const closeBtn   = document.getElementById('bubble-close-btn');
+    const pip        = document.getElementById('assistant-pip');
+
+    let bubbleVisible = true;
+    let autoMsgIdx    = 1; // start from 2nd message for auto-rotation
+
+    function showBubble(html) {
+      bubbleText.innerHTML = html;
+      bubble.style.display = '';
+      bubbleVisible = true;
+      toggleBtn.setAttribute('aria-expanded', 'true');
+      pip.style.display = 'none';
+      // Replay animation
+      bubble.style.animation = 'none';
+      bubble.offsetHeight;
+      bubble.style.animation = '';
+    }
+
+    function hideBubble() {
+      bubble.style.display = 'none';
+      bubbleVisible = false;
+      toggleBtn.setAttribute('aria-expanded', 'false');
+    }
+
+    closeBtn.addEventListener('click', hideBubble);
+
+    toggleBtn.addEventListener('click', () => {
+      if (bubbleVisible) {
+        hideBubble();
+      } else {
+        showBubble(assistantMessages[autoMsgIdx % assistantMessages.length]);
+        pip.style.display = 'none';
+      }
+    });
+
+    // Auto-rotate assistant messages every 18 s
+    setInterval(() => {
+      autoMsgIdx++;
+      if (!bubbleVisible) {
+        // Just show pip to signal a new message
+        pip.style.display = '';
+        return;
+      }
+      showBubble(assistantMessages[autoMsgIdx % assistantMessages.length]);
+    }, 18000);
+  </script>
+</body>
+</html>
