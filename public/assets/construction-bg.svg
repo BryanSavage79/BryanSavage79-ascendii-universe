@@ -1,0 +1,353 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="1920" height="1080">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0a0a1a"/>
+      <stop offset="60%" stop-color="#1a1a2e"/>
+      <stop offset="100%" stop-color="#16213e"/>
+    </linearGradient>
+    <linearGradient id="ground" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2a1f0a"/>
+      <stop offset="100%" stop-color="#1a1200"/>
+    </linearGradient>
+    <!-- Glow filter for glowing elements -->
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+      <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="softglow">
+      <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
+      <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <!-- Concrete texture pattern -->
+    <pattern id="concrete" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+      <rect width="40" height="40" fill="#2d2d2d"/>
+      <rect x="0" y="0" width="20" height="20" fill="#272727" opacity="0.5"/>
+      <rect x="20" y="20" width="20" height="20" fill="#323232" opacity="0.5"/>
+      <line x1="0" y1="0" x2="40" y2="0" stroke="#1a1a1a" stroke-width="0.5"/>
+      <line x1="0" y1="0" x2="0" y2="40" stroke="#1a1a1a" stroke-width="0.5"/>
+    </pattern>
+    <!-- Steel beam pattern -->
+    <pattern id="steel" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+      <rect width="20" height="20" fill="#3a3a3a"/>
+      <line x1="0" y1="0" x2="20" y2="20" stroke="#555" stroke-width="1" opacity="0.4"/>
+      <line x1="20" y1="0" x2="0" y2="20" stroke="#555" stroke-width="1" opacity="0.4"/>
+    </pattern>
+  </defs>
+
+  <!-- Sky Background -->
+  <rect width="1920" height="1080" fill="url(#sky)"/>
+
+  <!-- Stars in sky -->
+  <g opacity="0.6">
+    <circle cx="120" cy="80" r="1.5" fill="#fff"/>
+    <circle cx="340" cy="45" r="1" fill="#fff"/>
+    <circle cx="580" cy="110" r="1.5" fill="#fff"/>
+    <circle cx="800" cy="60" r="1" fill="#fff"/>
+    <circle cx="1050" cy="90" r="1.5" fill="#fff"/>
+    <circle cx="1280" cy="50" r="1" fill="#fff"/>
+    <circle cx="1500" cy="100" r="1.5" fill="#fff"/>
+    <circle cx="1750" cy="70" r="1" fill="#fff"/>
+    <circle cx="200" cy="150" r="1" fill="#aaa"/>
+    <circle cx="450" cy="130" r="1.5" fill="#aaa"/>
+    <circle cx="700" cy="165" r="1" fill="#aaa"/>
+    <circle cx="950" cy="140" r="1.5" fill="#aaa"/>
+    <circle cx="1200" cy="170" r="1" fill="#aaa"/>
+    <circle cx="1450" cy="145" r="1.5" fill="#aaa"/>
+    <circle cx="1700" cy="160" r="1" fill="#aaa"/>
+  </g>
+
+  <!-- Moon / amber construction light in sky -->
+  <circle cx="1750" cy="120" r="60" fill="#ff8c00" opacity="0.12" filter="url(#softglow)"/>
+  <circle cx="1750" cy="120" r="35" fill="#ffaa33" opacity="0.18" filter="url(#glow)"/>
+
+  <!-- Ground -->
+  <rect x="0" y="820" width="1920" height="260" fill="url(#ground)"/>
+  <rect x="0" y="820" width="1920" height="30" fill="#3d2f10" opacity="0.8"/>
+
+  <!-- Construction dirt/rubble on ground -->
+  <ellipse cx="200" cy="850" rx="120" ry="25" fill="#4a3515" opacity="0.6"/>
+  <ellipse cx="700" cy="840" rx="90" ry="20" fill="#4a3515" opacity="0.5"/>
+  <ellipse cx="1400" cy="855" rx="150" ry="22" fill="#4a3515" opacity="0.6"/>
+  <ellipse cx="1750" cy="845" rx="80" ry="18" fill="#4a3515" opacity="0.5"/>
+
+  <!-- === LEFT BUILDING STRUCTURE === -->
+  <!-- Main building shell (unfinished) -->
+  <rect x="50" y="350" width="320" height="480" fill="#1e1e1e" stroke="#2a2a2a" stroke-width="2"/>
+
+  <!-- Floors - left building -->
+  <rect x="50" y="350" width="320" height="4" fill="url(#steel)"/>
+  <rect x="50" y="430" width="320" height="4" fill="url(#steel)"/>
+  <rect x="50" y="510" width="320" height="4" fill="url(#steel)"/>
+  <rect x="50" y="590" width="320" height="4" fill="url(#steel)"/>
+  <rect x="50" y="670" width="320" height="4" fill="url(#steel)"/>
+  <rect x="50" y="750" width="320" height="4" fill="url(#steel)"/>
+
+  <!-- Vertical columns left building -->
+  <rect x="50" y="350" width="8" height="480" fill="#333"/>
+  <rect x="175" y="350" width="8" height="480" fill="#333"/>
+  <rect x="362" y="350" width="8" height="480" fill="#333"/>
+
+  <!-- Window openings (empty = unfinished) left building -->
+  <rect x="70" y="370" width="90" height="50" fill="#0a0a1a" stroke="#1a1a2e" stroke-width="1"/>
+  <rect x="200" y="370" width="90" height="50" fill="#0a0a1a" stroke="#1a1a2e" stroke-width="1"/>
+  <rect x="70" y="450" width="90" height="50" fill="#0a0a1a" stroke="#1a1a2e" stroke-width="1"/>
+  <rect x="200" y="450" width="90" height="50" fill="#0a0a1a" stroke="#1a1a2e" stroke-width="1"/>
+  <rect x="70" y="530" width="90" height="50" fill="#0a0a1a" stroke="#1a1a2e" stroke-width="1"/>
+  <!-- Some windows lit with amber glow -->
+  <rect x="200" y="530" width="90" height="50" fill="#3d2200" opacity="0.8"/>
+  <rect x="200" y="530" width="90" height="50" fill="#ff8800" opacity="0.15" filter="url(#glow)"/>
+  <rect x="70" y="610" width="90" height="50" fill="#3d2200" opacity="0.8"/>
+  <rect x="70" y="610" width="90" height="50" fill="#ff8800" opacity="0.12" filter="url(#glow)"/>
+  <rect x="200" y="610" width="90" height="50" fill="#0a0a1a"/>
+  <rect x="70" y="690" width="90" height="50" fill="#0a0a1a"/>
+  <rect x="200" y="690" width="90" height="50" fill="#3d2200" opacity="0.8"/>
+  <rect x="200" y="690" width="90" height="50" fill="#ff8800" opacity="0.12" filter="url(#glow)"/>
+
+  <!-- Scaffolding on left building -->
+  <!-- Outer scaffold frame -->
+  <rect x="10" y="300" width="8" height="540" fill="#555" opacity="0.9"/>
+  <rect x="380" y="300" width="8" height="540" fill="#555" opacity="0.9"/>
+  <!-- Horizontal scaffold planks -->
+  <rect x="10" y="300" width="378" height="6" fill="#6b4c1a"/>
+  <rect x="10" y="380" width="378" height="6" fill="#6b4c1a"/>
+  <rect x="10" y="460" width="378" height="6" fill="#6b4c1a"/>
+  <rect x="10" y="540" width="378" height="6" fill="#6b4c1a"/>
+  <rect x="10" y="620" width="378" height="6" fill="#6b4c1a"/>
+  <rect x="10" y="700" width="378" height="6" fill="#6b4c1a"/>
+  <!-- Scaffold cross braces -->
+  <line x1="10" y1="300" x2="388" y2="840" stroke="#555" stroke-width="2" opacity="0.5"/>
+  <line x1="388" y1="300" x2="10" y2="840" stroke="#555" stroke-width="2" opacity="0.5"/>
+
+  <!-- === CENTER-LEFT CRANE === -->
+  <!-- Tower -->
+  <rect x="490" y="100" width="30" height="730" fill="#2a2a2a"/>
+  <!-- Cross hatch on tower -->
+  <line x1="490" y1="100" x2="520" y2="200" stroke="#444" stroke-width="1.5"/>
+  <line x1="520" y1="100" x2="490" y2="200" stroke="#444" stroke-width="1.5"/>
+  <line x1="490" y1="200" x2="520" y2="300" stroke="#444" stroke-width="1.5"/>
+  <line x1="520" y1="200" x2="490" y2="300" stroke="#444" stroke-width="1.5"/>
+  <line x1="490" y1="300" x2="520" y2="400" stroke="#444" stroke-width="1.5"/>
+  <line x1="520" y1="300" x2="490" y2="400" stroke="#444" stroke-width="1.5"/>
+  <!-- Jib (horizontal arm) -->
+  <rect x="300" y="95" width="500" height="16" fill="#333"/>
+  <!-- Counter jib -->
+  <rect x="300" y="95" width="80" height="12" fill="#3a3a3a"/>
+  <!-- Counter weight -->
+  <rect x="280" y="80" width="60" height="35" fill="#444" rx="4"/>
+  <!-- Hook cable -->
+  <line x1="650" y1="111" x2="650" y2="350" stroke="#666" stroke-width="2"/>
+  <rect x="640" y="348" width="20" height="8" fill="#888" rx="2"/>
+  <!-- Crane top light -->
+  <circle cx="780" cy="95" r="8" fill="#ff4444" filter="url(#glow)" opacity="0.8"/>
+
+  <!-- === CENTER LARGE BUILDING === -->
+  <rect x="600" y="250" width="480" height="580" fill="#191919" stroke="#252525" stroke-width="2"/>
+
+  <!-- Floor plates center building -->
+  <rect x="600" y="250" width="480" height="5" fill="url(#steel)"/>
+  <rect x="600" y="330" width="480" height="5" fill="url(#steel)"/>
+  <rect x="600" y="410" width="480" height="5" fill="url(#steel)"/>
+  <rect x="600" y="490" width="480" height="5" fill="url(#steel)"/>
+  <rect x="600" y="570" width="480" height="5" fill="url(#steel)"/>
+  <rect x="600" y="650" width="480" height="5" fill="url(#steel)"/>
+  <rect x="600" y="730" width="480" height="5" fill="url(#steel)"/>
+
+  <!-- Columns center building -->
+  <rect x="600" y="250" width="10" height="580" fill="#2e2e2e"/>
+  <rect x="720" y="250" width="10" height="580" fill="#2e2e2e"/>
+  <rect x="840" y="250" width="10" height="580" fill="#2e2e2e"/>
+  <rect x="960" y="250" width="10" height="580" fill="#2e2e2e"/>
+  <rect x="1070" y="250" width="10" height="580" fill="#2e2e2e"/>
+
+  <!-- Window grid - center building -->
+  <!-- Row 1 -->
+  <rect x="620" y="265" width="85" height="55" fill="#0d0d1f" stroke="#1a1a2e" stroke-width="1"/>
+  <rect x="735" y="265" width="85" height="55" fill="#1a2200" opacity="0.9"/>
+  <rect x="735" y="265" width="85" height="55" fill="#88ff00" opacity="0.08" filter="url(#glow)"/>
+  <rect x="855" y="265" width="85" height="55" fill="#0d0d1f"/>
+  <rect x="975" y="265" width="85" height="55" fill="#1a2200" opacity="0.9"/>
+  <rect x="975" y="265" width="85" height="55" fill="#88ff00" opacity="0.08" filter="url(#glow)"/>
+  <!-- Row 2 -->
+  <rect x="620" y="345" width="85" height="55" fill="#1a2200" opacity="0.9"/>
+  <rect x="620" y="345" width="85" height="55" fill="#88ff00" opacity="0.06" filter="url(#glow)"/>
+  <rect x="735" y="345" width="85" height="55" fill="#0d0d1f"/>
+  <rect x="855" y="345" width="85" height="55" fill="#1a2200" opacity="0.9"/>
+  <rect x="855" y="345" width="85" height="55" fill="#88ff00" opacity="0.06" filter="url(#glow)"/>
+  <rect x="975" y="345" width="85" height="55" fill="#0d0d1f"/>
+  <!-- Row 3 -->
+  <rect x="620" y="425" width="85" height="55" fill="#0d0d1f"/>
+  <rect x="735" y="425" width="85" height="55" fill="#3d2200" opacity="0.9"/>
+  <rect x="735" y="425" width="85" height="55" fill="#ff8800" opacity="0.12" filter="url(#glow)"/>
+  <rect x="855" y="425" width="85" height="55" fill="#0d0d1f"/>
+  <rect x="975" y="425" width="85" height="55" fill="#0d0d1f"/>
+  <!-- Row 4 -->
+  <rect x="620" y="505" width="85" height="55" fill="#3d2200" opacity="0.9"/>
+  <rect x="620" y="505" width="85" height="55" fill="#ff8800" opacity="0.1" filter="url(#glow)"/>
+  <rect x="735" y="505" width="85" height="55" fill="#0d0d1f"/>
+  <rect x="855" y="505" width="85" height="55" fill="#3d2200" opacity="0.9"/>
+  <rect x="855" y="505" width="85" height="55" fill="#ff8800" opacity="0.1" filter="url(#glow)"/>
+  <rect x="975" y="505" width="85" height="55" fill="#0d0d1f"/>
+  <!-- Row 5 -->
+  <rect x="620" y="585" width="85" height="55" fill="#0d0d1f"/>
+  <rect x="735" y="585" width="85" height="55" fill="#0d0d1f"/>
+  <rect x="855" y="585" width="85" height="55" fill="#1a2200" opacity="0.9"/>
+  <rect x="855" y="585" width="85" height="55" fill="#88ff00" opacity="0.06" filter="url(#glow)"/>
+  <rect x="975" y="585" width="85" height="55" fill="#0d0d1f"/>
+  <!-- Row 6 -->
+  <rect x="620" y="665" width="85" height="55" fill="#0d0d1f"/>
+  <rect x="735" y="665" width="85" height="55" fill="#3d2200" opacity="0.9"/>
+  <rect x="735" y="665" width="85" height="55" fill="#ff8800" opacity="0.08" filter="url(#glow)"/>
+  <rect x="855" y="665" width="85" height="55" fill="#0d0d1f"/>
+  <rect x="975" y="665" width="85" height="55" fill="#3d2200" opacity="0.9"/>
+  <rect x="975" y="665" width="85" height="55" fill="#ff8800" opacity="0.08" filter="url(#glow)"/>
+  <!-- Row 7 -->
+  <rect x="620" y="745" width="85" height="55" fill="#0d0d1f"/>
+  <rect x="735" y="745" width="85" height="55" fill="#0d0d1f"/>
+  <rect x="855" y="745" width="85" height="55" fill="#0d0d1f"/>
+  <rect x="975" y="745" width="85" height="55" fill="#0d0d1f"/>
+
+  <!-- === RIGHT CRANE === -->
+  <rect x="1150" y="80" width="28" height="750" fill="#2a2a2a"/>
+  <line x1="1150" y1="80" x2="1178" y2="180" stroke="#444" stroke-width="1.5"/>
+  <line x1="1178" y1="80" x2="1150" y2="180" stroke="#444" stroke-width="1.5"/>
+  <line x1="1150" y1="180" x2="1178" y2="280" stroke="#444" stroke-width="1.5"/>
+  <line x1="1178" y1="180" x2="1150" y2="280" stroke="#444" stroke-width="1.5"/>
+  <line x1="1150" y1="280" x2="1178" y2="380" stroke="#444" stroke-width="1.5"/>
+  <line x1="1178" y1="280" x2="1150" y2="380" stroke="#444" stroke-width="1.5"/>
+  <!-- Right crane jib -->
+  <rect x="980" y="78" width="480" height="14" fill="#333"/>
+  <rect x="1430" y="78" width="80" height="12" fill="#3a3a3a"/>
+  <rect x="1450" y="63" width="60" height="35" fill="#444" rx="4"/>
+  <!-- Right crane hook cable -->
+  <line x1="1100" y1="92" x2="1100" y2="420" stroke="#666" stroke-width="2"/>
+  <rect x="1090" y="418" width="20" height="8" fill="#888" rx="2"/>
+  <!-- Right crane light -->
+  <circle cx="1000" cy="78" r="8" fill="#ff4444" filter="url(#glow)" opacity="0.8"/>
+
+  <!-- === RIGHT BUILDING === -->
+  <rect x="1280" y="300" width="360" height="530" fill="#1c1c1c" stroke="#282828" stroke-width="2"/>
+
+  <!-- Floor plates right building -->
+  <rect x="1280" y="300" width="360" height="4" fill="url(#steel)"/>
+  <rect x="1280" y="380" width="360" height="4" fill="url(#steel)"/>
+  <rect x="1280" y="460" width="360" height="4" fill="url(#steel)"/>
+  <rect x="1280" y="540" width="360" height="4" fill="url(#steel)"/>
+  <rect x="1280" y="620" width="360" height="4" fill="url(#steel)"/>
+  <rect x="1280" y="700" width="360" height="4" fill="url(#steel)"/>
+  <rect x="1280" y="780" width="360" height="4" fill="url(#steel)"/>
+
+  <!-- Columns right building -->
+  <rect x="1280" y="300" width="8" height="530" fill="#2e2e2e"/>
+  <rect x="1460" y="300" width="8" height="530" fill="#2e2e2e"/>
+  <rect x="1632" y="300" width="8" height="530" fill="#2e2e2e"/>
+
+  <!-- Window grid right building -->
+  <rect x="1300" y="315" width="145" height="55" fill="#0d0d1f"/>
+  <rect x="1475" y="315" width="145" height="55" fill="#3d2200" opacity="0.9"/>
+  <rect x="1475" y="315" width="145" height="55" fill="#ff8800" opacity="0.12" filter="url(#glow)"/>
+  <rect x="1300" y="395" width="145" height="55" fill="#1a2200" opacity="0.9"/>
+  <rect x="1300" y="395" width="145" height="55" fill="#88ff00" opacity="0.07" filter="url(#glow)"/>
+  <rect x="1475" y="395" width="145" height="55" fill="#0d0d1f"/>
+  <rect x="1300" y="475" width="145" height="55" fill="#0d0d1f"/>
+  <rect x="1475" y="475" width="145" height="55" fill="#1a2200" opacity="0.9"/>
+  <rect x="1475" y="475" width="145" height="55" fill="#88ff00" opacity="0.07" filter="url(#glow)"/>
+  <rect x="1300" y="555" width="145" height="55" fill="#3d2200" opacity="0.9"/>
+  <rect x="1300" y="555" width="145" height="55" fill="#ff8800" opacity="0.1" filter="url(#glow)"/>
+  <rect x="1475" y="555" width="145" height="55" fill="#0d0d1f"/>
+  <rect x="1300" y="635" width="145" height="55" fill="#0d0d1f"/>
+  <rect x="1475" y="635" width="145" height="55" fill="#0d0d1f"/>
+  <rect x="1300" y="715" width="145" height="55" fill="#1a2200" opacity="0.9"/>
+  <rect x="1300" y="715" width="145" height="55" fill="#88ff00" opacity="0.06" filter="url(#glow)"/>
+  <rect x="1475" y="715" width="145" height="55" fill="#0d0d1f"/>
+
+  <!-- Scaffolding on right building -->
+  <rect x="1640" y="240" width="8" height="595" fill="#555" opacity="0.9"/>
+  <rect x="1270" y="240" width="8" height="595" fill="#555" opacity="0.9"/>
+  <rect x="1270" y="240" width="378" height="6" fill="#6b4c1a"/>
+  <rect x="1270" y="320" width="378" height="6" fill="#6b4c1a"/>
+  <rect x="1270" y="400" width="378" height="6" fill="#6b4c1a"/>
+  <rect x="1270" y="480" width="378" height="6" fill="#6b4c1a"/>
+  <rect x="1270" y="560" width="378" height="6" fill="#6b4c1a"/>
+  <rect x="1270" y="640" width="378" height="6" fill="#6b4c1a"/>
+  <rect x="1270" y="720" width="378" height="6" fill="#6b4c1a"/>
+  <line x1="1270" y1="240" x2="1648" y2="835" stroke="#555" stroke-width="2" opacity="0.4"/>
+  <line x1="1648" y1="240" x2="1270" y2="835" stroke="#555" stroke-width="2" opacity="0.4"/>
+
+  <!-- FAR RIGHT building (partially visible, ultra-unfinished) -->
+  <rect x="1700" y="450" width="250" height="380" fill="#141414" stroke="#222" stroke-width="2"/>
+  <rect x="1700" y="450" width="250" height="4" fill="url(#steel)"/>
+  <rect x="1700" y="550" width="250" height="4" fill="url(#steel)"/>
+  <rect x="1700" y="650" width="250" height="4" fill="url(#steel)"/>
+  <rect x="1700" y="750" width="250" height="4" fill="url(#steel)"/>
+  <!-- Just columns, no walls -->
+  <rect x="1700" y="450" width="6" height="380" fill="#2e2e2e"/>
+  <rect x="1820" y="450" width="6" height="380" fill="#2e2e2e"/>
+  <rect x="1940" y="450" width="6" height="380" fill="#2e2e2e"/>
+
+  <!-- Construction warning lights (amber) scattered on structures -->
+  <circle cx="18" cy="295" r="6" fill="#ffaa00" filter="url(#glow)" opacity="0.7"/>
+  <circle cx="388" cy="295" r="6" fill="#ffaa00" filter="url(#glow)" opacity="0.7"/>
+  <circle cx="505" cy="90" r="5" fill="#ffaa00" filter="url(#glow)" opacity="0.8"/>
+  <circle cx="1163" cy="70" r="5" fill="#ffaa00" filter="url(#glow)" opacity="0.8"/>
+  <circle cx="1278" cy="235" r="6" fill="#ffaa00" filter="url(#glow)" opacity="0.7"/>
+  <circle cx="1648" cy="235" r="6" fill="#ffaa00" filter="url(#glow)" opacity="0.7"/>
+  <circle cx="1703" cy="445" r="5" fill="#ffaa00" filter="url(#glow)" opacity="0.6"/>
+
+  <!-- Construction equipment on ground -->
+  <!-- Bulldozer-like shape -->
+  <rect x="430" y="790" width="130" height="40" fill="#5a4000" rx="4"/>
+  <rect x="420" y="800" width="150" height="20" fill="#4a3500" rx="3"/>
+  <rect x="490" y="775" width="50" height="30" fill="#5a4000"/>
+  <circle cx="445" cy="832" r="12" fill="#222" stroke="#444" stroke-width="2"/>
+  <circle cx="555" cy="832" r="12" fill="#222" stroke="#444" stroke-width="2"/>
+
+  <!-- Concrete mixer -->
+  <rect x="1050" y="795" width="80" height="35" fill="#4a3500" rx="3"/>
+  <ellipse cx="1090" cy="800" rx="25" ry="30" fill="#3a3000" stroke="#555" stroke-width="1.5"/>
+  <circle cx="1050" cy="825" r="10" fill="#222" stroke="#444" stroke-width="2"/>
+  <circle cx="1130" cy="825" r="10" fill="#222" stroke="#444" stroke-width="2"/>
+
+  <!-- Material piles -->
+  <ellipse cx="920" cy="835" rx="50" ry="15" fill="#8B7355" opacity="0.7"/>
+  <ellipse cx="920" cy="825" rx="35" ry="12" fill="#9B8365" opacity="0.6"/>
+  <ellipse cx="1620" cy="840" rx="60" ry="14" fill="#555" opacity="0.7"/>
+  <ellipse cx="1620" cy="830" rx="40" ry="10" fill="#666" opacity="0.6"/>
+
+  <!-- Fence/barrier in foreground -->
+  <!-- Left fence -->
+  <rect x="0" y="835" width="450" height="8" fill="#8B6914"/>
+  <rect x="20" y="820" width="10" height="30" fill="#8B6914"/>
+  <rect x="80" y="820" width="10" height="30" fill="#8B6914"/>
+  <rect x="140" y="820" width="10" height="30" fill="#8B6914"/>
+  <rect x="200" y="820" width="10" height="30" fill="#8B6914"/>
+  <rect x="260" y="820" width="10" height="30" fill="#8B6914"/>
+  <rect x="320" y="820" width="10" height="30" fill="#8B6914"/>
+  <rect x="380" y="820" width="10" height="30" fill="#8B6914"/>
+  <rect x="430" y="820" width="10" height="30" fill="#8B6914"/>
+  <!-- Warning stripe on fence -->
+  <rect x="0" y="835" width="450" height="8" fill="none" stroke="#ff8800" stroke-width="0" opacity="0"/>
+  <line x1="0" y1="835" x2="450" y2="843" stroke="#333" stroke-width="0"/>
+
+  <!-- Right fence -->
+  <rect x="1460" y="835" width="460" height="8" fill="#8B6914"/>
+  <rect x="1470" y="820" width="10" height="30" fill="#8B6914"/>
+  <rect x="1530" y="820" width="10" height="30" fill="#8B6914"/>
+  <rect x="1590" y="820" width="10" height="30" fill="#8B6914"/>
+  <rect x="1650" y="820" width="10" height="30" fill="#8B6914"/>
+  <rect x="1710" y="820" width="10" height="30" fill="#8B6914"/>
+  <rect x="1770" y="820" width="10" height="30" fill="#8B6914"/>
+  <rect x="1830" y="820" width="10" height="30" fill="#8B6914"/>
+  <rect x="1890" y="820" width="10" height="30" fill="#8B6914"/>
+
+  <!-- Ambient dust/haze overlay at base -->
+  <rect x="0" y="750" width="1920" height="100" fill="#2a1800" opacity="0.2"/>
+
+  <!-- Top vignette -->
+  <rect x="0" y="0" width="1920" height="200" fill="#0a0a0a" opacity="0.4"/>
+
+  <!-- Bottom vignette -->
+  <rect x="0" y="900" width="1920" height="180" fill="#0a0a0a" opacity="0.5"/>
+
+  <!-- Subtle fog/atmosphere layer -->
+  <rect x="0" y="600" width="1920" height="250" fill="#1a1000" opacity="0.15"/>
+</svg>
