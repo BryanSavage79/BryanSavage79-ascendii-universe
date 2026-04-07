@@ -1,0 +1,20 @@
+[
+  {
+    "id": "under-construction-mall",
+    "theme": "construction",
+    "portals": [
+      {
+        "id": "academy",
+        "label": "Ascendii Academy",
+        "position": { "x": "30%", "y": "60%" },
+        "targetZone": "academy"
+      },
+      {
+        "id": "marketplace",
+        "label": "Marketplace",
+        "position": { "x": "70%", "y": "55%" },
+        "targetZone": "marketplace"
+      }
+    ]
+  }
+]
