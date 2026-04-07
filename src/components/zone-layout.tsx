@@ -163,6 +163,12 @@ const ZoneLayout: React.FC<ZoneLayoutProps> = ({ zone, children, onActivitySelec
 
   return (
     <div style={styles.root}>
+      <style>{`
+        .ascendii-activity-btn:hover {
+          border-color: #00ff88 !important;
+          background: rgba(0, 255, 136, 0.06) !important;
+        }
+      `}</style>
       <header style={styles.header}>
         <div style={styles.headerLeft}>
           <h1 style={styles.zoneName}>{zone.name}</h1>
@@ -197,18 +203,9 @@ const ZoneLayout: React.FC<ZoneLayoutProps> = ({ zone, children, onActivitySelec
               {zone.activities.map((activity) => (
                 <li key={activity.id}>
                   <button
+                    className="ascendii-activity-btn"
                     style={styles.activityItem}
                     onClick={() => onActivitySelect?.(activity)}
-                    onMouseEnter={(e) => {
-                      (e.currentTarget as HTMLButtonElement).style.borderColor = '#00ff88';
-                      (e.currentTarget as HTMLButtonElement).style.background =
-                        'rgba(0, 255, 136, 0.06)';
-                    }}
-                    onMouseLeave={(e) => {
-                      (e.currentTarget as HTMLButtonElement).style.borderColor =
-                        'rgba(0, 255, 136, 0.25)';
-                      (e.currentTarget as HTMLButtonElement).style.background = 'transparent';
-                    }}
                     aria-label={activity.label}
                   >
                     <div style={styles.activityLabel}>{activity.label}</div>
