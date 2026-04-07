@@ -25,7 +25,7 @@ contract TreasuryRouter is Ownable2Step {
     address public impactVault;         // 60% → charity:water etc.
     address public growthVault;         // 20% → Perpetual Mall (stETH/BTC/RWA)
     address public communityYieldVault;// 15% → feeds Sablier streams
-    address public bountyVaulti;         // 5% → governance proposals
+    address public bountyVault;         // 5% → governance proposals
 
     address public sablierBatch;        // Sablier V2 Batch contract
 
@@ -42,7 +42,7 @@ contract TreasuryRouter is Ownable2Step {
         uint256 bounty
     );
     
-    Construtor(
+    constructor(
         address _usdc,
         address _impactVault,
         address _growthVault,
@@ -51,13 +51,13 @@ contract TreasuryRouter is Ownable2Step {
         address _sablierBatch,
         address initialOwner
   ) { 
-        USDC = IERC20(_usdc),
+        USDC = IERC20(_usdc);
         impactVault = _impactVault;
         growthVault = _growthVault;
         communityYieldVault = _communityYieldVault;
         bountyVault = _bountyVault;
         sablierBatch = _sablierBatch;
-        _transferOwnership(intialOwner);
+        _transferOwnership(initialOwner);
      } 
      
      // Called by your CrossChainForge, bonding curves, etc.
