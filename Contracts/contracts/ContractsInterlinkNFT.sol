@@ -9,7 +9,13 @@ pragma solidity ^0.8.20;
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
-import "@openzeppelin/contracts/token/ERC20/extensions/IERC20Burnable.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+
+// Custom interface combining IERC20 with burnFrom, since OZ v4 does not expose a standalone IERC20Burnable.
+// OZ's ERC20Burnable.burnFrom(address, uint256) has no return value.
+interface IERC20Burnable is IERC20 {
+    function burnFrom(address account, uint256 amount) external;
+}
 
 interface IMilestoneTrigger {
     function canTrigger(uint256 tokenId, address actor) external view returns (bool);
@@ -35,66 +41,20 @@ contract InterlinkNFT is ERC721, Ownable {
     mapping(uint256 => ItemRecord) public items;
 
     // Component token used for crafting (must support burnFrom)
-    IERC20Burnable public componentToken;ERC721("InterlinkNFT", "iNFT") {
-        componentToken = _componentToken;
+    IERC20Burnable public componentToken;
+
+    IMilestoneTrigger public milestoneTrigger;
+
+    uint256 private constant SCALE = 10_000;
+
+    event Crafted(address indexed crafter, uint256 indexed tokenId, uint8 rarity);
+    event SaleRecorded(uint256 indexed tokenId, uint16 sellCount, uint256 computedValue);
+    event Transformed(uint256 indexed tokenId, string ritualName, uint256 computedValue);
+    event MilestoneTriggerChanged(address oldTrigger, address newTrigger);
+
+    constructor(address _componentToken) ERC721("InterlinkNFT", "iNFT") {
+        componentToken = IERC20Burnable(_componentToken);
     }
-k
-    // ------------------------
-    // Crafting (the initiation)
-    // ------------------------
-    /// @notice Craft a new item. The craft burns `componentCost` tokens from caller.
-    /// @dev For PoC, quality is derived deterministically from blockhash and caller.
-    function craft(
-        uint8 rarity,
-        uint32 attrs,
-        uint256 componentCost,
-        uint256 qualityHint
-    ) external {
-        require(rarity <= 3, "Invalid rarity");
-
-        // Collect components and burn them (the offering)
-        require(componentToken.transferFrom(msg.sender, address(this), componentCost), "transfer failed");
-        componentToken.burnFrom(address(this), componentCost);
-
-        // Create token
-        _ids.increment();
-        uint256 newId = _ids.current();
-
-        uint8 quality = _deriveQuality(qualityHint, newId);
-
-        uint256 baseValue = componentCost;
-        uint256 computed = _computeValue(rarity, 0, quality, attrs, baseValue);
-
-        items[newId] = ItemRecord({
-            rarity: rarity,
-            sellCount: 0,
-            quality: quality,
-            attrs: attrs,
-            baseValue: baseValue,
-            computedValue: computed
-        });
-
-        _safeMint(msg.sender, jnewId);
-
-        emit Crafted(msg.sender, newId, rarity);
-    }
-
-    // ------------------------
-    // Sales tracking (rites of passage)
-    // ------------------------
-    /// @notice Record a sale for a token. Trusted marketplace or owner may call.
-    function recordSale(uint256 tokenId) external {
-        require(_exists(tokenId), "nonexistent");
-        require(msg.sender == owner() || msg.sender == address(milestoneTrigger), "unauthorized");
-
-        ItemRecord storage it = items[tokenId];
-        it.sellCount += 1;
-        it.computedValue = _computeValue(it.rarity, it.sellCount, it.quality, it.attrs, it.baseValue);
-
-        emit SaleRecorded(tokenId, it.sellCount, it.computedValue);
-    }
-
-
     // ------------------------
     // Crafting (the initiation)
     // ------------------------
@@ -134,6 +94,7 @@ k
 
         emit Crafted(msg.sender, newId, rarity);
     }
+
     // ------------------------
     // Sales tracking (rites of passage)
     // ------------------------
