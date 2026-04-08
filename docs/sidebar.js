@@ -54,10 +54,13 @@
       left: 0;
       height: 100vh;
       width: 260px;
-      background: #0d0d0d;
-      border-right: 1px solid #00ff8833;
-      color: #00ff88;
-      font-family: 'Courier New', monospace;
+      /* Glassmorphism: frosted-glass navy base */
+      background: rgba(10, 17, 40, 0.72);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-right: 1px solid rgba(201, 168, 76, 0.18);
+      color: #e8e0cc;
+      font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
       font-size: 0.85em;
       overflow-y: auto;
       z-index: 1000;
@@ -73,15 +76,20 @@
       top: 12px;
       left: 12px;
       z-index: 1001;
-      background: #0d0d0d;
-      border: 1px solid #00ff88;
-      color: #00ff88;
-      font-family: 'Courier New', monospace;
+      background: rgba(10, 17, 40, 0.72);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(201, 168, 76, 0.35);
+      color: #c9a84c;
+      font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
       font-size: 1.1em;
       padding: 4px 10px;
       cursor: pointer;
       border-radius: 6px;
-      transition: left 0.3s ease;
+      transition: left 0.3s ease, box-shadow 0.2s ease;
+    }
+    #ascendii-sidebar-toggle:hover {
+      box-shadow: 0 0 12px rgba(201, 168, 76, 0.4);
     }
     #ascendii-sidebar-toggle.open {
       left: 272px;
@@ -91,8 +99,9 @@
       font-size: 1em;
       font-weight: bold;
       letter-spacing: 0.08em;
-      border-bottom: 1px solid #00ff8822;
-      text-shadow: 0 0 8px #00ff88;
+      border-bottom: 1px solid rgba(201, 168, 76, 0.15);
+      color: #f0c74b;
+      text-shadow: 0 0 10px rgba(201, 168, 76, 0.55);
     }
     #ascendii-sidebar ul {
       list-style: none;
@@ -100,22 +109,23 @@
       padding: 0;
     }
     #ascendii-sidebar li {
-      border-bottom: 1px solid #00ff8811;
+      border-bottom: 1px solid rgba(201, 168, 76, 0.08);
     }
     #ascendii-sidebar a {
       display: block;
       padding: 8px 20px;
-      color: #00ff88;
+      color: rgba(232, 224, 204, 0.85);
       text-decoration: none;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      transition: background 0.15s;
+      transition: background 0.15s ease, color 0.15s ease;
     }
     #ascendii-sidebar a:hover,
     #ascendii-sidebar a.active {
-      background: #00ff8818;
-      text-shadow: 0 0 6px #00ff88;
+      background: rgba(201, 168, 76, 0.10);
+      color: #f0c74b;
+      text-shadow: 0 0 8px rgba(201, 168, 76, 0.55);
     }
     #ascendii-sidebar .sb-group-toggle {
       display: flex;
@@ -125,10 +135,12 @@
       cursor: pointer;
       font-weight: bold;
       letter-spacing: 0.05em;
+      color: #c9a84c;
       user-select: none;
+      transition: background 0.15s ease;
     }
     #ascendii-sidebar .sb-group-toggle:hover {
-      background: #00ff8810;
+      background: rgba(201, 168, 76, 0.08);
     }
     #ascendii-sidebar .sb-group-toggle .sb-arrow {
       transition: transform 0.2s;
